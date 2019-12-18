@@ -1,0 +1,11 @@
+*.pyc
+*~
+__pycache__
+mydjango-venv
+db.sqlite3
+/static
+.DS_Store
+.idea
+
+### Other ###
+.directory
