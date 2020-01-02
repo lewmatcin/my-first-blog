@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import (
     get_object_or_404,
@@ -26,6 +27,7 @@ def post_detail(request: HttpRequest, pk: int) -> HttpResponse:
                   context={'post': post})
 
 
+@login_required
 def post_new(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = PostForm(request.POST)
@@ -42,6 +44,7 @@ def post_new(request: HttpRequest) -> HttpResponse:
                   context={'form': form})
 
 
+@login_required
 def post_edit(request: HttpRequest, pk: int) -> HttpResponse:
     post = get_object_or_404(klass=Post, pk=pk)
     if request.method == "POST":
@@ -59,6 +62,7 @@ def post_edit(request: HttpRequest, pk: int) -> HttpResponse:
                   context={'form': form})
 
 
+@login_required
 def post_draft_list(request: HttpRequest) -> HttpResponse:
     posts = Post.objects.filter(published_date__isnull=True).order_by('created_date')
 
@@ -67,6 +71,7 @@ def post_draft_list(request: HttpRequest) -> HttpResponse:
                   context={'posts': posts})
 
 
+@login_required
 def post_publish(request: HttpRequest, pk: int) -> HttpResponse:
     post = get_object_or_404(klass=Post, pk=pk)
     post.publish()
@@ -74,6 +79,7 @@ def post_publish(request: HttpRequest, pk: int) -> HttpResponse:
     return redirect(to='post_detail', pk=pk)
 
 
+@login_required
 def post_remove(request: HttpRequest, pk: int) -> HttpResponse:
     post = get_object_or_404(klass=Post, pk=pk)
     post.delete()
