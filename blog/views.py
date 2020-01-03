@@ -8,7 +8,7 @@ from django.shortcuts import (
 from django.utils import timezone
 
 from .forms import CommentForm, PostForm
-from .models import Post
+from .models import Comment, Post
 
 
 def post_list(request: HttpRequest) -> HttpResponse:
@@ -101,3 +101,17 @@ def add_comment_to_post(request: HttpRequest, pk: int) -> HttpResponse:
     return render(request=request,
                   template_name='blog/add_comment_to_post.html',
                   context={'form': form})
+
+
+@login_required
+def comment_approve(request: HttpRequest, pk: int) -> HttpResponse:
+    comment = get_object_or_404(klass=Comment, pk=pk)
+    comment.approve()
+    return redirect(to='post_detail', pk=comment.post.pk)
+
+
+@login_required
+def comment_remove(request: HttpRequest, pk: int) -> HttpResponse:
+    comment = get_object_or_404(klass=Comment, pk=pk)
+    comment.delete()
+    return redirect(to='post_detail', pk=comment.post.pk)

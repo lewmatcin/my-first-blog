@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import QuerySet
 from django.utils import timezone
 
 
@@ -12,6 +13,14 @@ class Post(models.Model):
     def publish(self) -> None:
         self.published_date = timezone.now()
         self.save()
+
+    @property
+    def approved_comments(self) -> QuerySet:
+        return self.comments.filter(approved_comment=True)
+
+    @property
+    def unverified_comments(self) -> QuerySet:
+        return self.comments.filter(approved_comment=False)
 
     def __str__(self) -> str:
         return self.title
